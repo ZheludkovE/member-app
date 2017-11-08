@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# Update grievance steps automaticaly
+/usr/bin/wget -q -O /dev/null http://localhost/api/grievance/BackgroundControl.php?processcode=ZGLqmeKpUJQS
