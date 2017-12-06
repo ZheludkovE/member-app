@@ -214,7 +214,7 @@
                 $parsedBody = $request->getParsedBody();
                 if($MAuth)
                 { 
-                    $checkmdefautl = memberdefaultcheck($MAuth); 
+                    $checkmdefautl = $this->memberdefaultcheck($MAuth); 
                     $db = getDB();
                     if($checkmdefautl)
                     { 
@@ -466,8 +466,8 @@
                 $MemberAuth = $request->getHeaderLine('Member-Auth-Token');
                 $member_id = $args['member_id']; 
                 if($memberDefault) //Default-Member-Token
-                {  
-                $check = memberdefaultcheck($memberDefault); 
+                {
+                $check = $this->memberdefaultcheck($memberDefault); 
                 if($check)
                 {  
                     $sql = "SELECT * FROM `member_data` WHERE `Member_ID` = '$member_id'"; 
@@ -563,7 +563,7 @@
             $email = $args['email']; 
             $db = getDB();
             if($MDAuth != ''){
-                $check = memberdefaultcheck($MDAuth);
+                $check = $this->memberdefaultcheck($MDAuth);
                 if($check)
                 {  
                     $sql = "SELECT * FROM `member_data` WHERE Email = '$email'"; 
@@ -635,12 +635,12 @@
         $MAuth = $request->getHeaderLine('Member-Auth-Token');  
         $parsedBody = $request->getParsedBody();
         $member_id = $args['member_id'];
-        echo $member_id;
+        //echo $member_id;
         $MID = ltrim(preg_replace("/[^0-9,.]/", "", $member_id ),'0');
-        echo $member_id;
+        // echo $MID;
         $db = getDB();
-        $EmpID = $parsedBody['Emp_No'];
-        echo '...'.$EmpID;
+        $EmpID = ltrim(preg_replace("/[^0-9,.]/", "", $parsedBody['Emp_No']),'0');
+        // echo '...'.$EmpID;
         if($MAuth)
         {    
                 $sqla = "SELECT * FROM `member_data` WHERE `Member_ID` = '$member_id'";
@@ -744,12 +744,14 @@
                          } 
                        }
                           else if($Role == 'Member')
-                          {  
-                          
-                             if($Report_To == '')
-                             {   
+                          {
+                              echo $Role;  
+                                echo $Report_To;
+                             if($Report_To == '' || $Report_To != '')
+                             {
+                                 echo '.... report_to is null';   
                               if($memma[0]->email == ''){ 
-                                    $Update = "UPDATE member_data SET $p First_Name = '$First_Name',Last_Name = '$Last_Name',Email = '$Email',Phone = '$Phone',Street_Address = '$Street_Address',Apt_Suite_Room = '$Apt_Suite_Room',City = '$City',State = '$State',Zip_Code = '$Zip',Company_Prefix = '$Company',Role = '$Role' WHERE Member_ID = '$member_id' ";
+                                    $Update = "UPDATE member_data SET $p First_Name = '$First_Name',Last_Name = '$Last_Name',Email = '$Email',Phone = '$Phone',Street_Address = '$Street_Address',Apt_Suite_Room = '$Apt_Suite_Room',City = '$City',State = '$State',Zip_Code = '$Zip',Company_Prefix = '$Company',Role = '$Role',Report_To = '$Report_To' WHERE Member_ID = '$member_id' ";
                                     $stmt = $db->query($Update); 
                                     $sqla = "SELECT * FROM `member_data` WHERE `Member_ID` = '$member_id'"; 
                                       
@@ -864,9 +866,10 @@
         $defaultAuth = $request->getHeaderLine('Default-Admin-Token');
         $Auth = $request->getHeaderLine('Admin-Auth-Token');
         $member_id = $args['member_id']; 
+        echo $member_id;
         if($memberAuth != '') //Default-Member-Token
         {  
-              $check = memberdefaultcheck($memberAuth); 
+              $check = $this->memberdefaultcheck($memberAuth); 
               if($check)
                {   
                    $sql = "SELECT * FROM `members` WHERE `Member_ID` = '$member_id'"; 
@@ -959,8 +962,8 @@
             $db = getDB();  
             if($Auth != ''){ 
                 if($Auth)
-                {   
-                    $checkauth = checkmemberlogin($Auth);
+                {   $auth = new AuthController();
+                    $checkauth = $auth->checkmemberlogin($Auth);
                     if($checkauth)
                     {
                         $comp = "SELECT * FROM company";
@@ -1035,7 +1038,7 @@
             if($DefaultAuth != '')
             { 
                 if($DefaultAuth){
-                    $auth = new MembersController();
+                    $auth = new AuthController();
                     $checkauth = $auth->checkmemberlogin($DefaultAuth);
                     if($checkauth)
                     {    

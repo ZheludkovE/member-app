@@ -449,7 +449,7 @@
             $member_id = $args['member_id']; 
             $platform = $args['key'];
             if($metaAuth) //Default-Member-Token
-            {     $auth = new MembersController();
+            {     $auth = new AuthController();
                   $check = $auth->checkmemberlogin($metaAuth); 
                   if($check)
                    {   

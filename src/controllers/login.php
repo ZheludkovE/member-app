@@ -73,12 +73,15 @@
         return $response; 
     }
 
-    function memberLogin($request, $response, $args) { 
+    function memberLogin($request, $response, $args) {
         $MAuth = $request->getHeaderLine('Default-Member-Token');  
         $parsedBody = $request->getParsedBody();
+        error_log(print_r($parsedBody, true)); 
         if($MAuth)
-        { 
-            $checkmdefautl = memberdefaultcheck($MAuth); 
+        {   
+           //error_log($request);
+            $memberauth = new MembersController();
+            $checkmdefautl = $memberauth->memberdefaultcheck($MAuth); 
             $db = getDB();
             if($checkmdefautl)
             { 
@@ -121,7 +124,7 @@
                     }       
                }
                else
-               {
+               {    
                     $sqla = "SELECT * FROM member_data WHERE Member_ID = '$UserName' AND Password = '$password'";
                     $stmta = $db->query($sqla);
                     $members = $stmta->fetchAll(PDO::FETCH_OBJ);  

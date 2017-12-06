@@ -628,7 +628,7 @@
                 }
                 else{
                    if($MemberAuth){
-                       $memberauth = new MembersController();
+                       $memberauth = new AuthController();
                        $checkauth = $memberauth->checkmemberlogin($MemberAuth);
                        if($checkauth)
                        {  

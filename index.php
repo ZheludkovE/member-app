@@ -16,14 +16,13 @@ spl_autoload_register(function ($class_name) {
 $app = new Slim\App();
 
 /* Register all the routes include */
-$files = glob($dir . 'src/routes/*.php');
+$files = glob('src/routes/*.php');
 
 foreach ($files as $file) {
     require_once($file);   
 }
 
 /* Test your app */
-
 $app->get('/', function ($request, $response, $args) {
 	$response->write("Welcome to UWUA");
 	return $response;});
